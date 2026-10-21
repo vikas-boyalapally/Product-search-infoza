@@ -1,3 +1,15 @@
+const formatCategoryName = (category) => {
+  return category
+    .split("-")
+    .map((word) => {
+      if (word === "mens") return "Men's";
+      if (word === "womens") return "Women's";
+
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(" ");
+};
+
 function FilterBar({
   categories,
   selectedCategory,
@@ -14,7 +26,6 @@ function FilterBar({
     <div className="filter-panel">
       <div className="row g-3 align-items-end">
 
-        {/* Category */}
         <div className="col-md-4">
           <label className="form-label">
             Category
@@ -33,13 +44,12 @@ function FilterBar({
 
             {categories.map((category) => (
               <option key={category} value={category}>
-                {category}
+                {formatCategoryName(category)}
               </option>
             ))}
           </select>
         </div>
 
-        {/* Minimum Price */}
         <div className="col-md-2">
           <label className="form-label">
             Min Price
@@ -57,7 +67,6 @@ function FilterBar({
           />
         </div>
 
-        {/* Maximum Price */}
         <div className="col-md-2">
           <label className="form-label">
             Max Price
@@ -75,7 +84,6 @@ function FilterBar({
           />
         </div>
 
-        {/* Sort */}
         <div className="col-md-3">
           <label className="form-label">
             Sort By
@@ -110,7 +118,6 @@ function FilterBar({
           </select>
         </div>
 
-        {/* Reset */}
         <div className="col-md-1">
           <button
             type="button"

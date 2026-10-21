@@ -38,6 +38,18 @@ function App() {
     fetchProducts();
   }, []);
 
+  const formatCategoryName = (category) => {
+    return category
+      .split("-")
+      .map((word) => {
+        if (word === "mens") return "Men's";
+        if (word === "womens") return "Women's";
+
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  };
+
   const categories = [
     ...new Set(products.map((product) => product.category)),
   ];
