@@ -4,12 +4,18 @@ function FilterBar({
   onCategoryChange,
   sortOption,
   onSortChange,
+  minPrice,
+  maxPrice,
+  onMinPriceChange,
+  onMaxPriceChange,
   onReset,
 }) {
   return (
     <div className="filter-panel">
       <div className="row g-3 align-items-end">
-        <div className="col-md-5">
+
+        {/* Category */}
+        <div className="col-md-4">
           <label className="form-label">
             Category
           </label>
@@ -33,7 +39,44 @@ function FilterBar({
           </select>
         </div>
 
-        <div className="col-md-5">
+        {/* Minimum Price */}
+        <div className="col-md-2">
+          <label className="form-label">
+            Min Price
+          </label>
+
+          <input
+            type="number"
+            className="form-control"
+            placeholder="Min"
+            min="0"
+            value={minPrice}
+            onChange={(event) =>
+              onMinPriceChange(event.target.value)
+            }
+          />
+        </div>
+
+        {/* Maximum Price */}
+        <div className="col-md-2">
+          <label className="form-label">
+            Max Price
+          </label>
+
+          <input
+            type="number"
+            className="form-control"
+            placeholder="Max"
+            min="0"
+            value={maxPrice}
+            onChange={(event) =>
+              onMaxPriceChange(event.target.value)
+            }
+          />
+        </div>
+
+        {/* Sort */}
+        <div className="col-md-3">
           <label className="form-label">
             Sort By
           </label>
@@ -67,7 +110,8 @@ function FilterBar({
           </select>
         </div>
 
-        <div className="col-md-2">
+        {/* Reset */}
+        <div className="col-md-1">
           <button
             type="button"
             className="btn btn-outline-secondary w-100"
@@ -76,6 +120,7 @@ function FilterBar({
             Reset
           </button>
         </div>
+
       </div>
     </div>
   );

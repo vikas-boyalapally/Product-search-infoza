@@ -4,7 +4,9 @@ import ProductGrid from "./components/ProductGrid";
 import SearchBar from "./components/SearchBar";
 import FilterBar from "./components/FilterBar";
 import ProductDetails from "./components/ProductDetails";
+import ProductSkeletonGrid from "./components/ProductSkeletonGrid";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import "./App.css";
 
 function App() {
@@ -14,6 +16,9 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortOption, setSortOption] = useState("default");
+
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -47,7 +52,20 @@ function App() {
         selectedCategory === "all" ||
         product.category === selectedCategory;
 
-      return matchesSearch && matchesCategory;
+      const matchesMinPrice =
+        minPrice === "" ||
+        product.price >= Number(minPrice);
+
+      const matchesMaxPrice =
+        maxPrice === "" ||
+        product.price <= Number(maxPrice);
+
+      return (
+        matchesSearch &&
+        matchesCategory &&
+        matchesMinPrice &&
+        matchesMaxPrice
+      );
     })
     .sort((a, b) => {
       switch (sortOption) {
@@ -68,6 +86,14 @@ function App() {
       }
     });
 
+  const clearFilters = () => {
+    setSearchTerm("");
+    setSelectedCategory("all");
+    setSortOption("default");
+    setMinPrice("");
+    setMaxPrice("");
+  };
+
   // Product details page
   if (selectedProduct) {
     return (
@@ -85,16 +111,20 @@ function App() {
   // Loading state
   if (loading) {
     return (
-      <div className="container py-5 text-center">
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">
-            Loading...
-          </span>
-        </div>
+      <div className="app">
+        <Navbar productCount={0} />
 
-        <p className="mt-3">
-          Loading products...
-        </p>
+        <section className="hero page-container">
+          <h1>Find the right product.</h1>
+
+          <p>
+            Search, filter and explore products from our collection.
+          </p>
+        </section>
+
+        <section className="product-section page-container">
+          <ProductSkeletonGrid />
+        </section>
       </div>
     );
   }
@@ -102,8 +132,18 @@ function App() {
   // Error state
   if (error) {
     return (
-      <div className="container py-5 text-center">
-        <h2>{error}</h2>
+      <div className="app">
+        <Navbar productCount={0} />
+
+        <div className="empty-state page-container">
+          <div className="empty-icon">
+            ⚠️
+          </div>
+
+          <h3>Unable to load products</h3>
+
+          <p>{error}</p>
+        </div>
       </div>
     );
   }
@@ -132,11 +172,11 @@ function App() {
           onCategoryChange={setSelectedCategory}
           sortOption={sortOption}
           onSortChange={setSortOption}
-          onReset={() => {
-            setSearchTerm("");
-            setSelectedCategory("all");
-            setSortOption("default");
-          }}
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+          onMinPriceChange={setMinPrice}
+          onMaxPriceChange={setMaxPrice}
+          onReset={clearFilters}
         />
 
         <p className="product-count mt-4">
@@ -150,15 +190,30 @@ function App() {
             onViewDetails={setSelectedProduct}
           />
         ) : (
-          <div className="text-center py-5">
+          <div className="empty-state">
+            <div className="empty-icon">
+              🔍
+            </div>
+
             <h3>No products found</h3>
 
-            <p className="text-muted">
-              Try changing your search or category filter.
+            <p>
+              We couldn't find any products matching your
+              current filters.
             </p>
+
+            <button
+              type="button"
+              className="btn btn-outline-dark"
+              onClick={clearFilters}
+            >
+              Clear Filters
+            </button>
           </div>
         )}
       </section>
+
+      <Footer />
     </div>
   );
 }
