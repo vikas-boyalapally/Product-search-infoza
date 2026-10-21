@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://dummyjson.com/products";
+const API_URL = "https://dummyjson.com/products?limit=0";
 
 export const getProducts = async () => {
   try {
